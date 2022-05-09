@@ -8,6 +8,8 @@ import { ErrorProvider } from '@hook/useError';
 // import ErrorMessage from 'components/ErrorMessage/ErrorMessage';
 import {ethers} from 'ethers';
 import { EthNetProvider } from '@hook/useEthNet';
+import ConnectButton, { ConnectIntent } from 'components/ConnectButton';
+import ErrorMessage from 'components/ErrorMessage/ErrorMessage';
 
 function getLibrary(provider){
   return new ethers.providers.Web3Provider(provider);
@@ -48,11 +50,15 @@ export default function App({ Component, pageProps }) {
         <ErrorProvider>
           <Web3ReactProvider getLibrary={getLibrary}>
             <EthNetProvider chainID={process.env.NEXT_PUBLIC_NETWORK}>
+              <ConnectIntent>
               <ThemeProvider theme={theme}>
                 {/* <ErrorMessage/> */}
                 <GlobalStyle />
+                <ErrorMessage/>
+                <ConnectButton/>
                 <Component {...pageProps} />
               </ThemeProvider>
+              </ConnectIntent>
             </EthNetProvider>
         </Web3ReactProvider>
        </ErrorProvider>
