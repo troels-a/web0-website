@@ -1201,10 +1201,12 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-abiapi@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/abiapi/-/abiapi-0.2.1.tgz#6122fcb467abecd587f6a1ebf6836b2fb3a5a4f3"
-  integrity sha512-4t3aJnx9qklbvDkaqYFbNiS1+W0o6LlBasvetVwdMHObihTABD6s+qTb12sXh75938zYfq+aovgBb66Eul/1eA==
+abiapi@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/abiapi/-/abiapi-0.2.2.tgz#f470bc2e471896f5cac445fbbda48b0dea7baabd"
+  integrity sha512-IqFpMnYUZMcDOQE+IkxrLxhIwcQUSqfJHzkPVdoZihONEskZ4zGGG8/6v+te98A4gyTD0k/OOe0yrhSjTOuwlg==
+  dependencies:
+    lodash "^4.17.21"
 
 abortcontroller-polyfill@^1.1.9:
   version "1.7.3"

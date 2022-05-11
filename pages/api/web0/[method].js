@@ -1,11 +1,14 @@
 import web0ABI from '../../../base/abi/web0.json';
 import { ethers } from "ethers";
 import ABIAPI from 'abiapi';
+import {bigNumbersToNumber} from 'abiapi/parsers';
 import { getProvider } from "../../../base/provider";
 
 const abi = new ABIAPI(web0ABI);
 abi.supportedMethods = abi.getReadMethods();
 abi.cacheTTL = 10;
+
+abi.addGlobalParser(bigNumbersToNumber)
 
 export default async (req, res) => {
 
@@ -19,6 +22,7 @@ export default async (req, res) => {
         
         try {
             data.result = await contract[method](...abi.methodParamsFromQuery(method, query));
+            data.result = abi.parse(method, data.result);
         }
         catch(e){
             data.error = e.toString();
