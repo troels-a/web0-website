@@ -263,13 +263,18 @@
         "internalType": "struct web0plugins.PluginInput[]",
         "name": "preview_",
         "type": "tuple[]"
+      },
+      {
+        "internalType": "bool",
+        "name": "encode_",
+        "type": "bool"
       }
     ],
     "name": "preview",
     "outputs": [
       {
         "internalType": "string",
-        "name": "",
+        "name": "html_",
         "type": "string"
       }
     ],

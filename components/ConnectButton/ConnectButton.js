@@ -10,12 +10,17 @@ import useError from 'base/hooks/useError';
 import { ethers } from 'ethers';
 import useENS from 'base/hooks/useENS';
 import useEthNet from 'base/hooks/useEthNet';
+import Modal, { ModalActions, ModalInner } from 'components/Modal';
 
 export const injected = new InjectedConnector({ supportedChainIds: [1, 4, 31337]});
 export const wcConnector = new WalletConnectConnector({
   infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
 });
 
+
+const Clickable = styled.div`
+  cursor: pointer;
+`
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,9 +32,9 @@ const Wrapper = styled.div`
 const ConnectGroup = styled.div`
 
   transition: opacity 500ms ease-out, transform 150ms ease-out;
-  position: fixed;
-  right: 2vw;
-  top: 2vw;
+  position: absolute;
+  top: -0.6em;
+  right: 0;
   opacity: 1;
   text-align: right;
   
@@ -40,7 +45,6 @@ const ConnectGroup = styled.div`
     pointer-events: none;
   `}
 
-  ${breakpoint('sm', 'lg')`
 
     ${p => p.choices && `
       position: fixed!important;
@@ -59,23 +63,17 @@ const ConnectGroup = styled.div`
       place-content: center;
       flex-direction: column;
     `}
-  `}
 
 `
 
 const Connect = styled.a`
 
   cursor: pointer;
-  margin-right: 2vw;
   white-space: pre;
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  ${breakpoint('sm', 'md')`
-    margin-right: 4vw;
-  `}
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 3em;
 
 `
 
@@ -136,18 +134,19 @@ export default function ConnectButton({onActivate}) {
     <Wrapper>
       
       <ConnectGroup $show={!connectIntent && !active}>
-        <Connect onClick={() => setConnectIntent(true)}>
+        <Clickable onClick={() => setConnectIntent(true)}>
           Connect
-        </Connect>
+        </Clickable>
       </ConnectGroup>
 
       <ConnectGroup $show={!connectIntent && active}>
-        <Connect onClick={deactivate}>
+        <Clickable onClick={deactivate}>
           Disconnect <small>({ENS && ENS}{(!ENS && account) && (truncate(account, 6, '...')+account.slice(-4))})</small>
-        </Connect>
+        </Clickable>
       </ConnectGroup>
-
-      <ConnectGroup choices $show={connectIntent}>
+      
+      <Modal show={connectIntent} zIndex={2000}>
+        <ModalInner>
         <Connect
           onClick={() => {
             if(onActivate)
@@ -169,7 +168,11 @@ export default function ConnectButton({onActivate}) {
         >
         <span>Walletconnect</span>
         </Connect>
-      </ConnectGroup>
+        <ModalActions position="center" actions={[
+          {label: 'Cancel', callback: () => setConnectIntent(false)}
+        ]}/>
+        </ModalInner>
+      </Modal>
 
     </Wrapper>
     );

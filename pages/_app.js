@@ -51,13 +51,11 @@ export default function App({ Component, pageProps }) {
           <Web3ReactProvider getLibrary={getLibrary}>
             <EthNetProvider chainID={process.env.NEXT_PUBLIC_NETWORK}>
               <ConnectIntent>
-              <ThemeProvider theme={theme}>
-                {/* <ErrorMessage/> */}
-                <GlobalStyle />
-                <ErrorMessage/>
-                <ConnectButton/>
-                <Component {...pageProps} />
-              </ThemeProvider>
+                <ThemeProvider theme={theme}>
+                  <GlobalStyle />
+                  <ErrorMessage/>
+                  <Component {...pageProps} />
+                </ThemeProvider>
               </ConnectIntent>
             </EthNetProvider>
         </Web3ReactProvider>
