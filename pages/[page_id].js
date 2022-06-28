@@ -1,18 +1,23 @@
 import { useWeb3React } from '@web3-react/core';
 import web0ABI from 'base/abi/web0.json';
-import web0pluginsABI from 'base/abi/web0plugins.json';
 import useContract from 'base/hooks/useContract.js';
 import useError from 'base/hooks/useError.js';
 import useWeb0 from 'base/hooks/useWeb0.js';
 import Button from 'components/Button/Button.js';
-import ConnectButton from 'components/ConnectButton/ConnectButton.js';
+import ConnectButton, { ConnectIntent, useConnectIntent } from 'components/ConnectButton/ConnectButton.js';
 import Modal, { ModalActions, ModalInner } from 'components/Modal/Modal.js';
+import InstallPlugin from 'components/Tools/InstallPlugin.js';
 import Head from 'next/head';
 import { useRouter } from 'next/router'
 import fetch from "node-fetch";
 import { useEffect, useRef, useState } from "react"
 import styled from 'styled-components';
 import {Logo} from './index.js';
+
+
+const tools = [
+    {title: 'Install plugin', component: InstallPlugin}
+]
 
 
 const Frame = styled.iframe`
@@ -28,19 +33,14 @@ const Wrapper = styled.div`
     place-items: center;
 `
 
-const AdminButton = styled.div`
+const AdminTop = styled.div`
+    display: flex;
     position: fixed;
-    width: 80px;
-    height: 60px;
-    top: 0;
-    background-color: grey;
-    right: 0;
-    z-index: 100;
-    transition: transform 200ms;
-    transform: translate(60%, -60%) rotate(45deg);
-    cursor: pointer;
-    &:hover {
-        transform: translate(40%, -40%) rotate(45deg);
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    > * {
+        margin-right: 10px;
     }
 `
 
@@ -49,47 +49,18 @@ export default function Page(){
 
     
     const [url, setUrl] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState(false);
     const [title, setTitle] = useState(false);
-    const [plugins, setPlugins] = useState(false);
     const {query} = useRouter();
     const {page_id} = query;
     const {account} = useWeb3React();
     const error = useError();
 
     const web0 = useContract({endpoint: '/api/web0', address: process.env.NEXT_PUBLIC_WEB0_ADDRESS, abi: web0ABI});
-    const web0plugins = useContract({endpoint: '/api/web0plugins', abi: web0pluginsABI});
 
 
-    const [admin, setAdmin] = useState(false);
-
-    useEffect(() => {
-
-        if(web0.contract){
-            web0.read('plugins', {page_id_: page_id}).then((data) => {
-                if(data.result)
-                    web0plugins.setOptions({address: data.result});
-                if(data.error)
-                    error.send(data.error)
-            });
-        }
-
-    }, [web0.contract]);
-
-    useEffect(() => {
-        if(web0plugins.contract){
-            setPlugins('loading');
-            web0plugins.read('list', {page_id_: page_id}).then(data => {
-                if(data.result)
-                    setPlugins(data.result);
-                if(data.error)
-                    error.send(data.error)
-            });
-        }
-    }, [web0plugins.contract])
-
+    const [tool, setTool] = useState(false);
     
-    const addRef = useRef();
-
     async function fetchPage(page_id){
         let res = await web0.read('html', {page_id_: page_id, encode_: true});
         setUrl(res.result);
@@ -97,38 +68,28 @@ export default function Page(){
         setTitle(res.result);
     }
 
-    async function handlePreview(address, params){
-        const preview = await web0plugins.read('preview', {page_id_: page_id, preview_: [address, params]});
-        setUrl(preview);
-    }
-
-    async function handleAdd(){
-
-    }
-
     useEffect(() => {
         if(page_id)
             fetchPage(page_id);
     }, [page_id])
 
+    const {active} = useWeb3React();
+    
+
     return <Wrapper>
         {title && <Head>
             <title>{title}</title>
         </Head>}
-        {url && <AdminButton onClick={() => setAdmin(true)}/>}
-        <Modal show={admin}>
+        {url && <AdminTop>{active && tools.map(tool => 
+            <a href="#" onClick={() => setTool(tool)}>{tool.title}</a>
+        )} <ConnectButton/></AdminTop>}
+        
+        <Modal show={tool && active}>
             <ModalInner>
-            <h1>Admin</h1>
-            {account && <div>
-                <h3>Plugins</h3>
-                {plugins == 'loading' && <div>Loading plugins</div>}
-                {(plugins != 'loading' && plugins.length > 0) && plugins.map(plugin => {
-                    <div>{plugin.name}</div>
-                })}
-                {(plugins != 'loading' && plugins.length == 0) && <div>No plugins</div>}
-            </div>}
+            <h1>{tool && tool.label}</h1>
+            {tool && <tool.component web0={web0} pageID={page_id}/>}
             <ModalActions actions={[
-                {label: 'close', callback: () => setAdmin(false)}
+                {label: 'close', callback: () => setTool(false)}
             ]}/>
             </ModalInner>
         </Modal>

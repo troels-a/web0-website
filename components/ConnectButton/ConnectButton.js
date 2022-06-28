@@ -23,47 +23,33 @@ const Clickable = styled.div`
 `
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  font-size: 1em;
-  position: relative;
 `
 
 const ConnectGroup = styled.div`
-
-  transition: opacity 500ms ease-out, transform 150ms ease-out;
-  position: absolute;
-  top: -0.6em;
-  right: 0;
-  opacity: 1;
-  text-align: right;
   
   ${p => !p.$show && `
-    transition: opacity 150ms ease-out, transform 500ms ease-out;
-    transform: translateX(100%);
-    opacity: 0;
-    pointer-events: none;
+    display: none;
   `}
+`
 
 
-    ${p => p.choices && `
-      position: fixed!important;
-      z-index: 1001!important;
-      top: 0!important;
-      bottom: 0!important;
-      left: 0!important;
-      right: 0!important;
-      width: 100vw;
-      height: 100vh;
-      background-color: ${p.theme.colors.bg};
-      font-size: 3em;
-      display: flex;
-      text-align: center;
-      place-items: center;
-      place-content: center;
-      flex-direction: column;
-    `}
 
+const Choices =  styled.div`
+    position: fixed!important;
+    z-index: 1001!important;
+    top: 0!important;
+    bottom: 0!important;
+    left: 0!important;
+    right: 0!important;
+    width: 100vw;
+    height: 100vh;
+    background-color: ${p => p.theme.colors.bg};
+    font-size: 3em;
+    display: flex;
+    text-align: center;
+    place-items: center;
+    place-content: center;
+    flex-direction: column;
 `
 
 const Connect = styled.a`
@@ -133,19 +119,19 @@ export default function ConnectButton({onActivate}) {
   return (
     <Wrapper>
       
-      <ConnectGroup $show={!connectIntent && !active}>
+      <ConnectGroup $show={!active}>
         <Clickable onClick={() => setConnectIntent(true)}>
           Connect
         </Clickable>
       </ConnectGroup>
 
-      <ConnectGroup $show={!connectIntent && active}>
+      <ConnectGroup $show={active}>
         <Clickable onClick={deactivate}>
           Disconnect <small>({ENS && ENS}{(!ENS && account) && (truncate(account, 6, '...')+account.slice(-4))})</small>
         </Clickable>
       </ConnectGroup>
       
-      <Modal show={connectIntent} zIndex={2000}>
+      <Modal show={connectIntent} zIndex={100}>
         <ModalInner>
         <Connect
           onClick={() => {

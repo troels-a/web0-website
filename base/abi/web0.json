@@ -3,30 +3,8 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "web0page_",
+        "name": "template_",
         "type": "address"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "supply",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "fee",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "fee_recipient",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct web0.Options",
-        "name": "options_",
-        "type": "tuple"
       }
     ],
     "stateMutability": "nonpayable",
@@ -153,25 +131,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -230,14 +189,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "template_",
-        "type": "address"
-      }
-    ],
-    "name": "addTemplate",
+    "inputs": [],
+    "name": "MAX_SUPPLY",
     "outputs": [
       {
         "internalType": "uint256",
@@ -245,7 +198,7 @@
         "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -397,29 +350,25 @@
   },
   {
     "inputs": [],
-    "name": "getOptions",
+    "name": "getFee",
     "outputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "supply",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "fee",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "fee_recipient",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct web0.Options",
+        "internalType": "uint256",
         "name": "",
-        "type": "tuple"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeRecipient",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -449,9 +398,9 @@
     "name": "getPageTemplate",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address",
         "name": "",
-        "type": "uint256"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -480,33 +429,14 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "version_",
-        "type": "uint256"
-      }
-    ],
-    "name": "getTemplate",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
         "name": "page_id_",
         "type": "uint256"
       }
     ],
-    "name": "getWeb0page",
+    "name": "getWeb0template",
     "outputs": [
       {
-        "internalType": "contract web0page",
+        "internalType": "contract web0template",
         "name": "",
         "type": "address"
       }
@@ -541,30 +471,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "page_id_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "encode_",
-        "type": "bool"
-      }
-    ],
-    "name": "image",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "owner",
         "type": "address"
@@ -581,30 +487,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "page_id_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "encode_",
-        "type": "bool"
-      }
-    ],
-    "name": "json",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -666,13 +548,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -748,21 +623,24 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "supply_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "fee_",
         "type": "uint256"
-      },
+      }
+    ],
+    "name": "setFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
         "name": "fee_recipient_",
         "type": "address"
       }
     ],
-    "name": "setOptions",
+    "name": "setFeeRecipient",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -775,9 +653,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "version_",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "template_",
+        "type": "address"
       }
     ],
     "name": "setPageTemplate",
@@ -830,19 +708,6 @@
         "internalType": "string",
         "name": "",
         "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "templateVersion",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -947,19 +812,6 @@
       }
     ],
     "name": "transferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

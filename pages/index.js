@@ -118,16 +118,17 @@ export default function Index(){
 
 
     return <Wrapper>
-        <ConnectButton/>
+
 
         <Section halfHeight itemsCenter>
             <Logo/>
         </Section>
-
+        
         <Section halfHeight textCenter contentCenter>
 
             <Grid.Unit>
-                <h2>200 OK</h2>
+                <h1>200 OK</h1>
+                <h2><ConnectButton/></h2>
                 <p>
                     Extendable 100% onchain html pages.<br/>
                     <a target="_blank" href="https://mirror.xyz/">Read this before proceeding.</a>
@@ -135,6 +136,7 @@ export default function Index(){
                 <br/>
             </Grid.Unit>
 
+            {active && 
             <Grid.Unit size={{sm: 10/12, md: 2/6}}>
                 <Input type="text" style={{width: 'calc(80% - 10px)', marginRight: '20px'}}ref={inputRef} onKeyDown={(e) => {if(e.key === 'Enter'){addPage()}}}/>
                 <Input type="button" style={{width: 'calc(20% - 10px)'}} value="+" onClick={addPage}/>
@@ -148,10 +150,14 @@ export default function Index(){
                 <small>
                 (0.001 ETH per page + gas)
                 </small>
-                <br/>
+            </Grid.Unit>
+            }
+
+            <Grid.Unit>
                 <small>
                     Built by <a href="https://continuousengagement.xyz" target="_blank">CE</a> · <a href={`https://etherscan.io/address/${process.env.NEXT_PUBLIC_WEB0_ADDRESS}`}>Contract</a>
                 </small>
+
             </Grid.Unit>
 
         </Section>

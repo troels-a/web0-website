@@ -123,9 +123,21 @@
             "type": "string"
           },
           {
-            "internalType": "uint256",
+            "components": [
+              {
+                "internalType": "string",
+                "name": "param_type",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "param_description",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct web0plugin.ParamInfo[]",
             "name": "params",
-            "type": "uint256"
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct web0plugin.Info",
