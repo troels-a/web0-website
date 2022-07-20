@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "abiapi": "^0.2.2",
+    "abiapi": "^0.3.2",
     "ethers": "^5.5.4",
     "lodash": "^4.17.21",
     "next": "11.1.2",

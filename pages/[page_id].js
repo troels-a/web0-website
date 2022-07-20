@@ -51,13 +51,13 @@ export default function Page(){
     const [url, setUrl] = useState(false);
     const [previewUrl, setPreviewUrl] = useState(false);
     const [title, setTitle] = useState(false);
+    const [owner, setOwner] = useState(false);
     const {query} = useRouter();
     const {page_id} = query;
-    const {account} = useWeb3React();
+    const {account, active} = useWeb3React();
     const error = useError();
 
     const web0 = useContract({endpoint: '/api/web0', address: process.env.NEXT_PUBLIC_WEB0_ADDRESS, abi: web0ABI});
-
 
     const [tool, setTool] = useState(false);
     
@@ -66,21 +66,21 @@ export default function Page(){
         setUrl(res.result);
         res = await web0.read('getPageTitle', {page_id_: page_id});
         setTitle(res.result);
+        res = await web0.read('ownerOf', {tokenId: page_id});
+        setOwner(res.result);
     }
 
     useEffect(() => {
         if(page_id)
             fetchPage(page_id);
     }, [page_id])
-
-    const {active} = useWeb3React();
     
 
     return <Wrapper>
         {title && <Head>
             <title>{title}</title>
         </Head>}
-        {url && <AdminTop>{active && tools.map(tool => 
+        {url && <AdminTop>{(active && owner == account) && tools.map(tool => 
             <a href="#" onClick={() => setTool(tool)}>{tool.title}</a>
         )} <ConnectButton/></AdminTop>}
         
