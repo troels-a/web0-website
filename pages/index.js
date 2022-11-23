@@ -133,7 +133,6 @@ export default function Index(){
                 <h2><ConnectButton/></h2>
                 <p>
                     Extendable 100% onchain html pages.<br/>
-                    <a target="_blank" href="https://mirror.xyz/">Read this before proceeding.</a>
                 </p>
                 <br/>
             </Grid.Unit>
