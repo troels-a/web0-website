@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Modal from "components/Modal";
 import { withTheme } from "styled-components";
 import styled from "styled-components";
+import Pager from "components/Pager/Pager";
 
 const nullAddress = '0x0000000000000000000000000000000000000000';
 
@@ -18,27 +19,71 @@ const PreviewModal = styled(({src, children, ...p}) => <Modal show={src} {...p}>
   }
 `
 
-export function ParamInput(props) {
-  const { param, onChange } = props;
-  const [value, setValue] = useState(param.value);
-  const [error, setError] = useState(null);
+const Wrapper = styled.div`
+  min-width: 320px;
+`
 
-  useEffect(() => {
-    setValue(param.value);
-  }, [param.value]);
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
-    if(onChange)
-        onChange(e.target.value);
+const InputGroup = styled.div`
+  width: 100%;
+  display: flex;
+  ${p => p.horizontal && `flex-direction: column;`}
+  margin: 0.5em 0;
+  &:first-of-type {
+    margin-top: 0;
+  }
+  &:last-of-type {
+    margin-bottom: 0;
   }
 
-  return (
-    <div className="param-input">
-      <input placeholder={param.description} type="text" value={value} onChange={handleChange} />
-      {error && <div className="error">{error}</div>}
-    </div>
-  );
+  small {
+    margin-bottom: 0.5em;
+  }
+
+`
+
+const Input = styled.input`
+  box-sizing: border-box;
+  padding: 1em;
+  ${p => p.width && `width: ${p.width}%;`}
+`
+
+const Button = styled.button`
+  box-sizing: border-box;
+  padding: 1em;
+  ${p => p.width && `width: ${p.width}%;`}
+`
+
+
+const Label = styled.label`
+  padding: 1em;
+  ${p => p.width && `width: ${p.width}%;`}
+  &:first-child {
+    padding-left: 0em;
+  }
+`
+
+export function ParamInput({ setParams, index, param, onChange, ...props}) {
+
+  const handleChange = (e) => {
+
+    const value = e.target.value;
+
+    setParams((params) => {
+      const newParams = [...params];
+      newParams[index] = [
+        param.type === 'string' ? value : '',
+        param.type === 'uint' ? value : 0,
+        param.type === 'address' ? value : nullAddress,
+        param.type === 'bool' ? value : false,
+      ];
+      return newParams;
+    });
+    
+    if(onChange)
+      onChange(value);
+  }
+
+  return <Input {...props} placeholder={param.description} type="text" onChange={handleChange} />
 }
 
 export default function InstallPlugin({web0, pageID, ...p}){
@@ -78,20 +123,53 @@ export default function InstallPlugin({web0, pageID, ...p}){
       await web0plugins.write('install', {page_id_: pageID, plugins_: [[address, slot, params]]});
     }
 
+    const [params, setParams] = useState([]);
+    const [slot, setSlot] = useState(1);
+    const [page, setPage] = useState(1);
 
-    return <div>
-        <h3>Install plugin</h3>
-        <form onSubmit={handleLookup}>
-            <input type="text" ref={pluginInputRef}/>
-            <input type="submit" value="Fetch plugin info"/>
-        </form>
-        {plugin && <div>
-            {plugin.name}
-            {plugin.params.map(param => <ParamInput param={param}/>)}
-            <button onClick={() => handlePreview(pluginAddress, 10, plugin.params.map(param => ['', 0, nullAddress, false]))}>Generate preview</button>
-            <button onClick={() => handleInstall(pluginAddress, 10, plugin.params.map(param => ['', 0, nullAddress, false]))}>Install</button>
-            <PreviewModal src={previewUrl}><a href="" onClick={e => {e.preventDefault(); setPreviewUrl(false)}}>Close</a></PreviewModal>
-        </div>}
-    </div>
+    useEffect(() => {
+      if(plugin){
+        setPage(2);
+      }
+    }, [plugin]);
+
+    return <Wrapper>
+        <h3>Install plugin{plugin && `: ${plugin.name}`}</h3>
+        <Pager currentPage={page} pages={
+          [
+            // Page 1
+            () => <>
+            <form onSubmit={handleLookup}>
+              <InputGroup>
+                <Input width={70} type="text" ref={pluginInputRef}/>
+                <Input type="submit" value="Load plugin"/>
+              </InputGroup>
+            </form>
+            </>,
+
+            // Page 2
+            () => <>
+              <InputGroup horizontal>
+                <small width={10}>Slot</small>
+                <Input width={100} type="number" value={slot} onChange={e => setSlot(e.target.value)}/>
+              </InputGroup>
+              {plugin.params.length > 0 && <>
+              <label>Parameters</label>
+              {plugin.params.map((param, index) => <InputGroup horizontal>
+                <small>{index+1} - {param.description}</small>
+                <ParamInput width={100} setParams={setParams} key={index} index={index} param={param}/>
+              </InputGroup>)}              
+              
+              </>
+              }
+              <InputGroup>
+                <Button width={50} onClick={() => handlePreview(pluginAddress, slot, params)}>Preview</Button>
+                <Button width={50} onClick={() => handleInstall(pluginAddress, slot, params)}>Install</Button>
+              </InputGroup>
+              <PreviewModal src={previewUrl}><a href="" onClick={e => {e.preventDefault(); setPreviewUrl(false)}}>Close</a></PreviewModal>
+            </>
+          ]
+        }/>
+    </Wrapper>
 
 }

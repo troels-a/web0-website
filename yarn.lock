@@ -1201,10 +1201,10 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-abiapi@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/abiapi/-/abiapi-0.2.2.tgz#f470bc2e471896f5cac445fbbda48b0dea7baabd"
-  integrity sha512-IqFpMnYUZMcDOQE+IkxrLxhIwcQUSqfJHzkPVdoZihONEskZ4zGGG8/6v+te98A4gyTD0k/OOe0yrhSjTOuwlg==
+abiapi@^0.3.2:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/abiapi/-/abiapi-0.3.3.tgz#a9e58782ce482540c6ae62034410caec66f7414c"
+  integrity sha512-w/EMd4gky+NoRmrTPXXDpic8DCRjITcmBPELdpj25UTJ6nLDO2gg89uTSwqYQxCkNg7l/g+d94C1vF9l65icMg==
   dependencies:
     lodash "^4.17.21"
 

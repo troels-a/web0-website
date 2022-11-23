@@ -31,8 +31,10 @@ export const Wrapper = styled.div`
 `
 
 export const Logo = styled(p => <img {...p} src="/logo.gif"/>)`
-place-self: center;
-margin: 0 auto;
+
+    place-self: center;
+    margin: 0 auto;
+    
 `
 
 const Input = styled.input`
@@ -78,7 +80,7 @@ export default function Index(){
         if(active){
 
             try {
-                await web0.write('createPages', {titles_: pages}, {value: ethers.utils.parseEther('0.001').mul(pages.length)});
+                await web0.write('createPages', {titles_: pages}, {value: 0});
             }
             catch(err){
                 console.log(err)
@@ -148,14 +150,13 @@ export default function Index(){
                 </Items>
                 <Input type="button" onClick={handleCreate} disabled={pages.length == 0} value={pages.length == 0 ? 'Input page title' : (pages.length > 1 ? `Create ${pages.length} pages` : 'Create page')}/>
                 <small>
-                (0.001 ETH per page + gas)
                 </small>
             </Grid.Unit>
             }
 
             <Grid.Unit>
                 <small>
-                    Built by <a href="https://continuousengagement.xyz" target="_blank">CE</a> · <a href={`https://etherscan.io/address/${process.env.NEXT_PUBLIC_WEB0_ADDRESS}`}>Contract</a>
+                    Built by <a href="https://twitter.com/troels_a" target="_blank">troels_a</a> · <a href={`https://etherscan.io/address/${process.env.NEXT_PUBLIC_WEB0_ADDRESS}`}>Contract</a>
                 </small>
 
             </Grid.Unit>

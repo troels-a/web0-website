@@ -89,7 +89,7 @@ export default function Page(){
             <h1>{tool && tool.label}</h1>
             {tool && <tool.component web0={web0} pageID={page_id}/>}
             <ModalActions actions={[
-                {label: 'close', callback: () => setTool(false)}
+                {label: 'Cancel', callback: () => setTool(false)}
             ]}/>
             </ModalInner>
         </Modal>
