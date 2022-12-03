@@ -96,6 +96,9 @@ export default function useContract(options){
             const _args = objectToArray(args);
             return contract[method](..._args, extra)
         }
+        else {
+            console.log('No contract')
+        }
     }
 
 

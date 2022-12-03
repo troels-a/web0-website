@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core';
+import useContract from 'base/hooks/useContract';
 import useError from 'base/hooks/useError';
 import useWeb0 from 'base/hooks/useWeb0';
 import ConnectButton from 'components/ConnectButton';
@@ -7,6 +8,9 @@ import { ethers } from 'ethers';
 import { useEffect, useRef, useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import Grid from 'styled-components-grid';
+import web0serverABI from 'base/abi/web0server.json';
+
+const nullAddress = '0x0000000000000000000000000000000000000000';
 
 const pulse = keyframes`
     0% {
@@ -72,20 +76,24 @@ export default function Index(){
     const inputRef = useRef();
     const {active} = useWeb3React();
     const web0 = useWeb0();
+    const web0server = useContract({
+        address: process.env.NEXT_PUBLIC_WEB0SERVER_ADDRESS,
+        abi: web0serverABI,
+        endpoint: '/api/web0server'
+    })
+    
     const error = useError();
 
     const [pages, setPages] = useState([]);
 
     async function handleCreate(){
         if(active){
-
             try {
-                await web0.write('createPages', {titles_: pages}, {value: 0});
+                await web0server.write('issuePages', {titles_: pages, template_: nullAddress}, {value: 0});
             }
             catch(err){
                 console.log(err)
             }
-
         }
         else{
             alert('Please connect');
