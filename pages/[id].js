@@ -4,9 +4,9 @@ import fetch from "node-fetch";
 import { useState, useEffect } from "react";
 
 const getBaseUrl = () => {
-    if(process.env.NEXT_PUBLIC_VERCEL_ENVIRONMENT){
+    if(process.env.NEXT_PUBLIC_VERCEL_ENV){
         // Use the process.env variables to construct the base URL
-        if(process.env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === 'production'){
+        if(process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'){
             return `https://web0.page`;
         }
         else {
