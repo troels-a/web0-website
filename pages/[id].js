@@ -4,9 +4,9 @@ import fetch from "node-fetch";
 import { useState, useEffect } from "react";
 
 const getBaseUrl = () => {
-  if (process.env.VERCEL_URL) {
+  if(process.env.VERCEL) {
     // Use the process.env variables to construct the base URL
-    return process.env.VERCEL_URL;
+    return `https://${process.env.VERCEL_URL}`;
   } else {
     // Use the request object to construct the base URL
     return `http://localhost:3000`;
