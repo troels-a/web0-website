@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import Grid from 'styled-components-grid';
 import web0serverABI from 'base/abi/web0server.json';
+import Link from 'next/link';
+import BrowserFrame from 'components/BrowserFrame';
 
 const nullAddress = '0x0000000000000000000000000000000000000000';
 
@@ -24,13 +26,20 @@ const pulse = keyframes`
     }
 `
 
-export const Wrapper = styled.div`
 
-    width: 100vw;
+const Body = styled.div`
+    max-width: 1000px;
+    margin: 20px auto;
     display: flex;
-    place-items: center;
-    justify-content: center;
     flex-direction: column;
+    text-align: center;
+    place-items: center;
+    place-content: center;
+    min-height: calc(100% - 40px);
+
+`
+
+export const Wrapper = styled.div`
 
 `
 
@@ -46,6 +55,9 @@ const Input = styled.input`
     padding: 20px;
     box-sizing: border-box;
     margin-bottom: 20px;
+    ${p => p.clickable && css`
+        cursor: pointer!important;
+    `}
 `
 
 const Remove = styled.span`
@@ -69,6 +81,12 @@ const Items = styled.div`
         background-color: rgba(0,0,0,0.1);
     }
 `
+
+const Form = styled.form`
+    margin: 0 auto;
+    min-width: 300px;
+`
+
 
 
 export default function Index(){
@@ -129,14 +147,13 @@ export default function Index(){
 
     return <Wrapper>
 
+        <BrowserFrame>
+            <Body>
 
-        <Section halfHeight itemsCenter>
-            <Logo/>
-        </Section>
         
-        <Section halfHeight textCenter contentCenter>
 
             <Grid.Unit>
+            <Logo/>
                 <h1>200 OK</h1>
                 <h2><ConnectButton/></h2>
                 <p>
@@ -146,16 +163,16 @@ export default function Index(){
             </Grid.Unit>
 
             {active && 
-            <Grid.Unit size={{sm: 10/12, md: 2/6}}>
+            <Grid.Unit as={Form} size={{sm: 10/12, md: 2/6}}>
                 <Input type="text" style={{width: 'calc(80% - 10px)', marginRight: '20px'}}ref={inputRef} onKeyDown={(e) => {if(e.key === 'Enter'){addPage()}}}/>
-                <Input type="button" style={{width: 'calc(20% - 10px)'}} value="+" onClick={addPage}/>
+                <Input type="button" style={{width: 'calc(20% - 10px)'}} value="+" onClick={addPage} clickable/>
                 <Items>
                 {pages.map((title, index) => <div key={index}>
                     <Remove onClick={(event) => removePage(index)}/><span>{title}</span>
                     </div>
                 )}
                 </Items>
-                <Input type="button" onClick={handleCreate} disabled={pages.length == 0} value={pages.length == 0 ? 'Input page title' : (pages.length > 1 ? `Create ${pages.length} pages` : 'Create page')}/>
+                <Input clickable type="button" onClick={handleCreate} disabled={pages.length == 0} value={pages.length == 0 ? 'Input page title' : (pages.length > 1 ? `Create ${pages.length} pages` : 'Create page')}/>
                 <small>
                 </small>
             </Grid.Unit>
@@ -165,11 +182,10 @@ export default function Index(){
                 <small>
                     Built by <a href="https://twitter.com/troels_a" target="_blank">troels_a</a> · <a href={`https://etherscan.io/address/${process.env.NEXT_PUBLIC_WEB0_ADDRESS}`}>Contract</a>
                 </small>
-
             </Grid.Unit>
 
-        </Section>
-
+        </Body>
+        </BrowserFrame>
 
     </Wrapper>;
 
