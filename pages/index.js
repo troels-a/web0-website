@@ -150,8 +150,7 @@ export default function Index(){
         <BrowserFrame>
             <Body>
 
-        
-
+    
             <Grid.Unit>
             <Logo/>
                 <h1>200 OK</h1>

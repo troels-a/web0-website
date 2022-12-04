@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import styled, {css} from 'styled-components';
+
+import Link from 'next/link';
 
 const TopBar = styled.div`
     
@@ -16,6 +18,21 @@ const TopBar = styled.div`
     box-sizing: border-box;
     z-index: 1;
     transition: all 0.2s ease-in-out;
+
+    ${p => p.loading && css`
+        animation: gradientBG 500ms ease infinite;
+        @keyframes gradientBG {
+            0% {
+              background-color: ##eee;
+            }
+            50% {
+                background-color: #f5f5f5;
+            }
+            100% {
+                background-color: #eee;
+            }
+          }        
+    `}
 
     &:after {
         content: '';
@@ -38,10 +55,6 @@ const BrowserButton = styled.div`
 `
 
 
-const CloseButton = styled(BrowserButton)`
-  float: right;
-`;
-
 const FullscreenButton = styled(BrowserButton)`
   float: right;
   background-color: #0f0;
@@ -60,26 +73,37 @@ const Content = styled.div`
     box-sizing: border-box;
     background-color: #fff;
     overflow: scroll;
+    transition: all 0.2s ease-in-out;
+    ${p => p.loading && css`
+        opacity: 0;
+    `}
 `
 
 const UrlBar = styled(({address, ...p}) => {
+
     const router = useRouter();
     const [inputValue, setInputValue] = useState(address);
   
     const handleSubmit = (event) => {
       event.preventDefault();
-      router.push({
-        pathname: '/[id]',
-        query: { id: inputValue },
-      });
+      router.push(`/${inputValue}`);
     };
+
+    useEffect(() => {
+        setInputValue(address);
+    }, [address])
   
-    return (
-      <form {...p} onSubmit={handleSubmit}>
-          <input type="number" value={inputValue} onChange={event => setInputValue(event.target.value)}/>
-          {inputValue ? <button type="submit">></button> : null}
+    return <form {...p} onSubmit={handleSubmit}>
+          <Link href="/">
+            web0
+          </Link>
+          <span>
+          ://
+          </span>
+          <input type="number" min={0} value={inputValue} onChange={event => setInputValue(event.target.value)}/>
+          {inputValue ? <button type="submit">go</button> : null}
       </form>
-    );
+      
 })`
     
     width: 100%;
@@ -102,7 +126,7 @@ const UrlBar = styled(({address, ...p}) => {
         padding: 0;
         line-height: 1em;
         margin: 0;
-        padding-left: 60px;
+        padding-left: 0;
         font: inherit;
         display: inline-block;
     }
@@ -113,14 +137,6 @@ const UrlBar = styled(({address, ...p}) => {
         background-color: transparent;
         cursor: pointer;
         padding: 0;
-    }
-
-    &:before {
-        content: 'web0://';
-        display: inline-block;
-        color: inherit;
-        position: absolute;
-        top: 0px;
     }
 `
 
@@ -134,6 +150,9 @@ const BrowserFrameWrapper = styled.div`
     border: 1px solid rgba(0,0,0,0.1);
     transition: all 0.2s ease-in-out;
 
+    ${p => p.loading && css`
+        opacity: 0.5;
+    `}
 
     ${p => p.expand ? 
     css`
@@ -162,18 +181,18 @@ const BrowserFrameWrapper = styled.div`
 `;
 
 
-const BrowserFrame = ({ url, children, address}) => {
+const BrowserFrame = ({ url, children, address, loading}) => {
 
     const [fullscreen, setFullscreen] = useState(false);
 
   return (
     <BrowserFrameWrapper expand={fullscreen}>
 
-      <TopBar>
+      <TopBar loading={loading}>
         <UrlBar type="text" address={address}/>
         <FullscreenButton onClick={() => setFullscreen(!fullscreen)} />
       </TopBar>
-      <Content>
+      <Content loading={loading}>
           {url ? <IFrame src={url} /> : children}
       </Content>
 
