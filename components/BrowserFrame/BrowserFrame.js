@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import {useState} from 'react';
 import styled, {css} from 'styled-components';
 
@@ -61,9 +62,25 @@ const Content = styled.div`
     overflow: scroll;
 `
 
-const UrlBar = styled(({address, ...p}) => <div {...p}>
-    <input type="text" value={address}/>
-</div>)`
+const UrlBar = styled(({address, ...p}) => {
+    const router = useRouter();
+    const [inputValue, setInputValue] = useState(address);
+  
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      router.push({
+        pathname: '/[id]',
+        query: { id: inputValue },
+      });
+    };
+  
+    return (
+      <form {...p} onSubmit={handleSubmit}>
+          <input type="number" value={inputValue} onChange={event => setInputValue(event.target.value)}/>
+          {inputValue ? <button type="submit">></button> : null}
+      </form>
+    );
+})`
     
     width: 100%;
     height: 100%;
@@ -71,20 +88,31 @@ const UrlBar = styled(({address, ...p}) => <div {...p}>
     color: #333;
     line-height: 2.5em;
     font-family: 'Courier New', mono-space;
+    text-align: left;
 
     input {
         border: none;
         background-color: transparent;
-        padding: 0 10px;
+        padding: 0px;
         box-sizing: border-box;
         outline: none;
         display: inline-block;
-        width: 100%;
+        width: auto;
         height: 100%;
         padding: 0;
         line-height: 1em;
+        margin: 0;
         padding-left: 60px;
         font: inherit;
+        display: inline-block;
+    }
+
+    button {
+        border: 0;
+        font: inherit;
+        background-color: transparent;
+        cursor: pointer;
+        padding: 0;
     }
 
     &:before {
@@ -92,6 +120,7 @@ const UrlBar = styled(({address, ...p}) => <div {...p}>
         display: inline-block;
         color: inherit;
         position: absolute;
+        top: 0px;
     }
 `
 
