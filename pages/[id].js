@@ -4,13 +4,19 @@ import fetch from "node-fetch";
 import { useState, useEffect } from "react";
 
 const getBaseUrl = () => {
-  if(process.env.NEXT_PUBLIC_VERCEL_URL) {
-    // Use the process.env variables to construct the base URL
-    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
-  } else {
-    // Use the request object to construct the base URL
-    return `http://localhost:3000`;
-  }
+    if(process.env.VERCEL_ENVIRONMENT){
+        // Use the process.env variables to construct the base URL
+        if(process.env.NEXT_PUBLIC_VERCEL_ENVIRONMENT === 'production'){
+            return `https://web0.page`;
+        }
+        else {
+            return `https://${process.env.VERCEL_URL}`;
+        }
+    }
+    else {
+        // Use the request object to construct the base URL
+        return `http://localhost:3000`;
+    }
 };
 
 const Page = ({ id, ...p }) => {
