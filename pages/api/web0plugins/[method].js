@@ -11,9 +11,30 @@ abi.cacheTTL = 10;
 
 abi.addGlobalParser(bigNumbersToNumber)
 
+abi.addParser('list', async function(value){
+
+    const plugins = [];
+
+    for(let i = 0; i < value.length; i++){
+        const plugin = value[i];
+        plugins.push({
+            name: plugin[0],
+            location: plugin[1],
+            slot: plugin[2],
+            params: plugin[3],
+        })
+    }
+
+    return plugins;
+})
+
 export default async (req, res) => {
 
-    const data = {};
+    const data = {
+        status: 200,
+        result: null
+    };
+
     const {method, ...query} = req.query;
 
     if(abi.supportsMethod(method)){
@@ -27,23 +48,24 @@ export default async (req, res) => {
         
         try {
             data.result = await contract[method](...abi.methodParamsFromQuery(method, query));
-            data.result = abi.parse(method, data.result);
+            data.result = await abi.parse(method, data.result);
         }
         catch(e){
+            data.status = 500;
             data.error = e.toString();
         }
 
     }
     else{
+        data.status = 404;
         data.error = 'Unsupported method';
     }
 
-    const status = data.error ? 400 : 200;
 
-    if(status == 200)
+    if(data.status === 200)
         res.setHeader(`Cache-Control`, `s-maxage=${abi.getMethodCacheTTL(method)}, stale-while-revalidate`)
 
-    res.status(status).json(data);
+    res.status(data.status).json(data);
 
 
 }

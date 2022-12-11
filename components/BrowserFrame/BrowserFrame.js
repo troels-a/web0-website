@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import {useEffect, useState} from 'react';
 import styled, {css} from 'styled-components';
-
 import Link from 'next/link';
+import useBrowserFrame from './useBrowserFrame';
+import NotFound from 'pages/404';
 
 const TopBar = styled.div`
     
@@ -60,13 +61,6 @@ const FullscreenButton = styled(BrowserButton)`
   background-color: #0f0;
 `;
 
-const IFrame = styled.iframe`
-  width: 100%;
-  height: calc(100% - 30px);
-  border: none;
-  overflow: scroll;
-`;
-
 const Content = styled.div`
     width: 100%;
     height: calc(100% - 30px);
@@ -74,24 +68,32 @@ const Content = styled.div`
     background-color: #fff;
     overflow: scroll;
     transition: all 0.2s ease-in-out;
-    ${p => p.loading && css`
-        opacity: 0;
-    `}
+    // ${p => p.loading && css`
+    //     opacity: 0;
+    // `}
 `
 
-const UrlBar = styled(({address, ...p}) => {
+const UrlBar = styled(({location, ...p}) => {
 
     const router = useRouter();
-    const [inputValue, setInputValue] = useState(address);
+    const browser = useBrowserFrame();
+
+    const [url, setUrl] = useState('');
   
     const handleSubmit = (event) => {
       event.preventDefault();
-      router.push(`/${inputValue}`);
+      const path = `/${url}`;
+      router.push(path);
     };
 
+    // Set location from router path when the router changes
     useEffect(() => {
-        setInputValue(address);
-    }, [address])
+        if(router.asPath){
+            const location = router.asPath.replace('/', '');
+            browser.setLocation(location)
+            setUrl(location);
+        }
+    }, [router]);
   
     return <form {...p} onSubmit={handleSubmit}>
           <Link href="/">
@@ -100,8 +102,8 @@ const UrlBar = styled(({address, ...p}) => {
           <span>
           ://
           </span>
-          <input type="number" min={0} value={inputValue} onChange={event => setInputValue(event.target.value)}/>
-          {inputValue ? <button type="submit">go</button> : null}
+          <input style={{width: `${20 + (url.length)*7.2}px`}} value={url} onChange={event => setUrl(event.target.value)}/>
+          {/* <button type="submit">go</button> */}
       </form>
       
 })`
@@ -181,23 +183,25 @@ const BrowserFrameWrapper = styled.div`
 `;
 
 
-const BrowserFrame = ({ url, children, address, loading}) => {
 
-    const [fullscreen, setFullscreen] = useState(false);
+const BrowserFrame = ({children}) => {
 
-  return (
-    <BrowserFrameWrapper expand={fullscreen}>
+    const browser = useBrowserFrame();
 
-      <TopBar loading={loading}>
-        <UrlBar type="text" address={address}/>
-        <FullscreenButton onClick={() => setFullscreen(!fullscreen)} />
-      </TopBar>
-      <Content loading={loading}>
-          {url ? <IFrame src={url} /> : children}
-      </Content>
+    return (
+        <BrowserFrameWrapper expand={browser.fullscreen}>
 
-    </BrowserFrameWrapper>
-  );
+        <TopBar loading={browser.loading}>
+            <UrlBar type="text" location={browser.location}/>
+            <FullscreenButton onClick={() => browser.setFullscreen(!browser.fullscreen)} />
+        </TopBar>
+
+        <Content>
+            {children}
+        </Content>
+
+        </BrowserFrameWrapper>
+    );
 };
 
 export default BrowserFrame;

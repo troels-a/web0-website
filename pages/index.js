@@ -11,6 +11,8 @@ import Grid from 'styled-components-grid';
 import web0serverABI from 'base/abi/web0server.json';
 import Link from 'next/link';
 import BrowserFrame from 'components/BrowserFrame';
+import useBrowserFrame from 'components/BrowserFrame/useBrowserFrame';
+import Main from 'templates/Main';
 
 const nullAddress = '0x0000000000000000000000000000000000000000';
 
@@ -144,10 +146,14 @@ export default function Index(){
         
     }
 
+    const browser = useBrowserFrame();
+    useEffect(() => {
+        browser.setLocation('');
+    }, [])
 
-    return <Wrapper>
 
-        <BrowserFrame>
+    return <Main>
+
             <Body>
 
     
@@ -184,8 +190,7 @@ export default function Index(){
             </Grid.Unit>
 
         </Body>
-        </BrowserFrame>
 
-    </Wrapper>;
+    </Main>;
 
 }

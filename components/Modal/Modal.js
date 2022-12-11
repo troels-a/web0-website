@@ -56,7 +56,7 @@ const Buttons = styled.div`
 export const ModalActions = function({actions, ...p}){
 
     return <Buttons {...p}>
-        {actions && actions.map(action => <Button invertColors={action.cta} onClick={action.callback}>{action.label}</Button>)}
+        {actions && actions.map((action, i) => <Button key={i} invertColors={action.cta} onClick={action.callback}>{action.label}</Button>)}
     </Buttons>
 
 }

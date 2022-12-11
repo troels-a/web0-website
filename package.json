@@ -9,14 +9,14 @@
     "start": "next start"
   },
   "dependencies": {
-    "abiapi": "^0.3.2",
+    "abiapi": "^0.3.4",
     "ethers": "^5.5.4",
     "lodash": "^4.17.21",
-    "next": "11.1.2",
+    "next": "13.0.6",
     "node-fetch": "^2.6.1",
-    "react": "^16.8.0",
+    "react": "^18.2.0",
     "react-aspect-ratio": "^1.0.49",
-    "react-dom": "^16.8.0",
+    "react-dom": "^18.2.0 ",
     "styled-components": "^5.0.0",
     "styled-components-breakpoint": "^3.0.0-preview.20",
     "styled-components-grid": "^2.2.2",

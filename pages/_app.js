@@ -10,6 +10,8 @@ import {ethers} from 'ethers';
 import { EthNetProvider } from '@hook/useEthNet';
 import ConnectButton, { ConnectIntent } from 'components/ConnectButton';
 import ErrorMessage from 'components/ErrorMessage/ErrorMessage';
+import useBrowserFrame, {BrowserFrameProvider} from 'components/BrowserFrame/useBrowserFrame';
+import BrowserFrame from 'components/BrowserFrame';
 
 function getLibrary(provider){
   return new ethers.providers.Web3Provider(provider);
@@ -44,6 +46,17 @@ const GlobalStyle = createGlobalStyle`
 `
 
 
+
+const Main = ({Component, pageProps}) => {
+
+  const browser = useBrowserFrame();
+
+  return <BrowserFrame>
+    <Component {...pageProps}/>
+  </BrowserFrame>
+}
+  
+
 export default function App({ Component, pageProps }) {
 
   return (
@@ -54,7 +67,9 @@ export default function App({ Component, pageProps }) {
                 <ThemeProvider theme={theme}>
                   <GlobalStyle />
                   <ErrorMessage/>
-                  <Component {...pageProps} />
+                  <BrowserFrameProvider>
+                    <Main Component={Component} {...pageProps}/>
+                  </BrowserFrameProvider>
                 </ThemeProvider>
               </ConnectIntent>
             </EthNetProvider>

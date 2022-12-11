@@ -22,7 +22,7 @@ export default async (req, res) => {
         
         try {
             data.result = await contract[method](...abi.methodParamsFromQuery(method, query));
-            data.result = abi.parse(method, data.result);
+            data.result = await abi.parse(method, data.result);
         }
         catch(e){
             data.error = e.toString();
